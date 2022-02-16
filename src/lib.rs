@@ -9,7 +9,11 @@ pub struct SuffixArray<B, T = u8, Im = ()> {
     value_type: PhantomData<T>,
 }
 
-impl<T : Ord, B: AsRef<[T]>, Im> SuffixArray<B, T, Im> {
+impl<T, B, Im> SuffixArray<B, T, Im>
+where
+    T: Ord,
+    B: AsRef<[T]>,
+{
     pub fn search_naive<B2>(&self, values: B2) -> Result<usize, usize>
     where
         B2: AsRef<[T]>,
@@ -56,6 +60,7 @@ impl<T> IndexMode<T> for () {
 #[derive(Debug, Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
 pub struct StrIndex;
 impl IndexMode<u8> for StrIndex {
+    #[inline]
     fn is_index(&self, _pos: usize, value: &u8) -> bool {
         (*value as i8) >= -0x40
     }
