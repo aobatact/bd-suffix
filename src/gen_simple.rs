@@ -73,7 +73,7 @@ where
         } else {
             return Self {
                 values,
-                indices: vec![0],
+                indices: vec![],
                 mode,
                 value_type: PhantomData,
             };
@@ -88,7 +88,7 @@ where
             if mode.is_index(i, v) {
                 ind_count += 1;
                 let mut bucket = buckets.entry(v).or_insert_with(|| (0, vec![]));
-                if prev > v {
+                if prev < v {
                     ltypes.set(i, true);
                     bucket.0 += 1;
                 } else {
@@ -112,38 +112,34 @@ where
             *indices.get_unchecked_mut(*h) = x;
             *h += 1;
         }
-
         l_count_all -= 1;
-        'outer: while l_count_all != 0 {
-            for i in 0..indices.len() {
-                let ind = indices[i];
-                if ind == 0 {
-                    continue;
+        for i in 0..indices.len() {
+            let ind = indices[i];
+            if ind == 0 {
+                continue;
+            }
+            if ind != usize::MAX {
+                let mut ind_i = ind - 1;
+                while !mode.is_index(ind_i, &source[ind_i]) {
+                    ind_i -= 1;
                 }
-                if ind != usize::MAX {
-                    let mut ind_i = ind - 1;
-                    while !mode.is_index(ind_i, &source[ind_i]) {
-                        ind_i -= 1;
+                let mut b_ref = unsafe { ltypes.get_unchecked_mut(ind_i) };
+                if b_ref == true {
+                    b_ref.set(true);
+                    unsafe {
+                        let v = &source[ind_i];
+                        let h = &mut buckets.get_mut(v).unwrap_unchecked().0;
+                        indices[*h] = ind_i;
+                        h.add_assign(1);
                     }
-                    let mut b_ref = unsafe { ltypes.get_unchecked_mut(ind_i) };
-                    if b_ref == true {
-                        b_ref.set(true);
-                        unsafe {
-                            let v = &source[ind_i];
-                            let h = &mut buckets.get_mut(v).unwrap_unchecked().0;
-                            indices[*h] = ind_i;
-                            h.add_assign(1);
-                        }
-                        l_count_all -= 1;
-                        if l_count_all == 0 {
-                            break 'outer;
-                        }
+                    l_count_all -= 1;
+                    if l_count_all == 0 {
+                        break;
                     }
                 }
             }
         }
-        debug_assert!(Self::gen_test(source, &indices));
-
+        //Self::gen_test(source, &indices);
         Self {
             values,
             indices,
@@ -152,22 +148,30 @@ where
         }
     }
 
-    fn gen_test(values: &[T], indices: &[usize]) -> bool {
-        indices.iter().all(|x| *x != usize::MAX)
-            && indices
+    #[allow(dead_code)]
+    fn gen_test(values: &[T], indices: &[usize]) {
+        #[cfg(debug_assertions)]
+        {
+            assert!(
+                indices.iter().all(|x| *x != usize::MAX),
+                "Invalid tmp index"
+            );
+            indices
                 .iter()
-                .try_fold(None, |o, x| {
+                .enumerate()
+                .try_fold(None, |o, (i, x)| {
                     if let Some(o) = o {
-                        if values[o] < values[*x] {
-                            Some(Some(*x))
+                        if values[o..] < values[*x..] {
+                            Ok(Some(*x))
                         } else {
-                            None
+                            Err((i, *x))
                         }
                     } else {
-                        Some(Some(*x))
+                        Ok(Some(*x))
                     }
                 })
-                .is_some()
+                .expect("not sorted propery");
+        }
     }
 }
 
