@@ -1,6 +1,7 @@
 use std::marker::PhantomData;
 
 mod gen_simple;
+mod sp_u8;
 
 pub struct SuffixArray<B, T = u8, Im = ()> {
     values: B,
