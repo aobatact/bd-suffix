@@ -1,4 +1,4 @@
-use std::marker::PhantomData;
+use std::{marker::PhantomData, collections::BTreeMap, ops::AddAssign};
 use crate::{IndexMode, SuffixArray};
 
 impl<B, Im> SuffixArray<B, u8, Im>
