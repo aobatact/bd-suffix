@@ -9,7 +9,7 @@ where
     Im: IndexMode<T>,
 {
     #[inline]
-    fn sort_indices(values: &[T], indices: &mut [usize]) {
+    pub(crate) fn sort_indices(values: &[T], indices: &mut [usize]) {
         indices.sort_by_key(|x| &values[*x..]);
     }
 
@@ -61,6 +61,7 @@ where
         let mut iter = source.iter().enumerate().rev();
         let mut last_v = None;
         let mut x = 0;
+        //get the last item
         for (i, v) in &mut iter {
             if mode.is_index(i, v) {
                 last_v = Some(v);
@@ -71,6 +72,7 @@ where
         let last_v = if let Some(last_v) = last_v {
             last_v
         } else {
+            //zero index item -> early return
             return Self {
                 values,
                 indices: vec![],
@@ -79,11 +81,13 @@ where
             };
         };
         let mut ltypes = BitVec::<usize, Lsb0>::repeat(false, x + 1);
-        // ltypes.set(x, true);
+        // ltypes.set(x, true); ignored because we know that it will be used bellow.
         let mut buckets = BTreeMap::new();
         let mut prev = last_v;
+        // the last item is l type.
         buckets.insert(prev, (1, vec![]));
         let mut ind_count = 0;
+        // Check whether the item is l or s type and throw it in the bucket.
         for (i, v) in iter {
             if mode.is_index(i, v) {
                 ind_count += 1;
@@ -98,21 +102,26 @@ where
             }
         }
         let mut indices = Vec::with_capacity(ind_count);
+        //l item counter
         let mut l_count_all = 0;
         for (_k, (ref mut l_count, ref mut s_indices)) in buckets.iter_mut() {
             let old_len = indices.len();
+            // fill the l type slots at dummy slot.
             indices.extend(core::iter::repeat(usize::MAX).take(*l_count));
             l_count_all += *l_count;
             *l_count = old_len;
+            // sort the s type and put in the slots.
             Self::sort_indices(&source, s_indices);
             indices.append(s_indices);
         }
+        // the last item is l type and should be inserted here.
         unsafe {
             let h = &mut buckets.get_mut(last_v).unwrap_unchecked().0;
             *indices.get_unchecked_mut(*h) = x;
             *h += 1;
         }
         l_count_all -= 1;
+        // fill the l types
         for i in 0..indices.len() {
             let ind = indices[i];
             if ind == 0 {
@@ -123,9 +132,8 @@ where
                 while !mode.is_index(ind_i, &source[ind_i]) {
                     ind_i -= 1;
                 }
-                let mut b_ref = unsafe { ltypes.get_unchecked_mut(ind_i) };
+                let b_ref = unsafe { ltypes.get_unchecked(ind_i) };
                 if b_ref == true {
-                    b_ref.set(true);
                     unsafe {
                         let v = &source[ind_i];
                         let h = &mut buckets.get_mut(v).unwrap_unchecked().0;
@@ -149,7 +157,7 @@ where
     }
 
     #[allow(dead_code)]
-    fn gen_test(values: &[T], indices: &[usize]) {
+    pub(crate) fn gen_test(values: &[T], indices: &[usize]) {
         #[cfg(debug_assertions)]
         {
             assert!(
