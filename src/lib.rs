@@ -35,4 +35,14 @@ where
     pub fn mode(&self) -> &Im {
         &self.mode
     }
+
+    /// Get a reference to the suffix array's indices.
+    pub fn indices(&self) -> &[usize] {
+        self.indices.as_ref()
+    }
+
+    /// Get a reference to the suffix array's values.
+    pub fn values(&self) -> &B {
+        &self.values
+    }
 }

@@ -101,7 +101,6 @@ where
                 }
             }
         }
-        println!("{indices:?}");
         #[cfg(test)]
         {
             Self::gen_check(source, &indices)
