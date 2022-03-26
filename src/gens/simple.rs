@@ -88,4 +88,19 @@ where
     #[cfg(not(feature = "gen_check"))]
     #[inline]
     pub(crate) fn gen_check(_values: &[T], _indices: &[usize]) {}
+
+    pub(crate) fn check_remove_index(values: &[T], indices: &mut Vec<usize>, mode: &Im) {
+        if mode.need_check() {
+            Self::check_remove_index_inner(indices, mode, values);
+        }
+    }
+
+    fn check_remove_index_inner(indices: &mut Vec<usize>, mode: &Im, values: &[T]) {
+        for i in (0..indices.len()).rev() {
+            let index = indices[i];
+            if !mode.is_index(index, &values[index]) {
+                indices.remove(i);
+            }
+        }
+    }
 }

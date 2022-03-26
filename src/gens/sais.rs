@@ -18,7 +18,7 @@ where
         let mut last_i = 0;
         //get the last item
         for (i, v) in &mut iter {
-            if mode.is_index(i, v) {
+            if true || mode.is_index(i, v) {
                 last_v = Some(v);
                 last_i = i;
                 break;
@@ -39,7 +39,7 @@ where
         let mut prev_s_i = last_i;
         let mut full_count = 1;
         for (i, v) in iter {
-            if mode.is_index(i, v) {
+            if true || mode.is_index(i, v) {
                 full_count += 1;
                 let bucket = buckets.entry(v).or_insert_with(|| (0, 0, vec![]));
                 if prev < v {
@@ -83,11 +83,11 @@ where
             }
             if ind != usize::MAX {
                 let mut ind_i = ind - 1;
-                if mode.need_check() {
-                    while !mode.is_index(ind_i, &source[ind_i]) {
-                        ind_i -= 1;
-                    }
-                }
+                // if mode.need_check() {
+                //     while !mode.is_index(ind_i, &source[ind_i]) {
+                //         ind_i -= 1;
+                //     }
+                // }
                 let b_ref = unsafe { ltypes.get_unchecked(ind_i) };
                 if b_ref == true {
                     unsafe {
@@ -106,11 +106,11 @@ where
             }
             if unsafe { ltypes.get_unchecked(ind) } == true {
                 let mut ind_i = ind - 1;
-                if mode.need_check() {
-                    while !mode.is_index(ind_i, &source[ind_i]) {
-                        ind_i -= 1;
-                    }
-                }
+                // if mode.need_check() {
+                //     while !mode.is_index(ind_i, &source[ind_i]) {
+                //         ind_i -= 1;
+                //     }
+                // }
                 let mut b_ref = unsafe { ltypes.get_unchecked_mut(ind_i) };
                 if b_ref == false {
                     unsafe {
@@ -124,6 +124,7 @@ where
             }
         }
         Self::gen_check(source, &indices);
+        Self::check_remove_index(source, &mut indices, &mode);
         Self {
             values,
             indices,
@@ -146,7 +147,7 @@ where
         let mut last_i = 0;
         //get the last item
         for (i, v) in &mut iter {
-            if mode.is_index(i, v) {
+            if true || mode.is_index(i, v) {
                 last_v = Some(v);
                 last_i = i;
                 break;
@@ -167,7 +168,7 @@ where
         let mut prev_s_i = last_i;
         let mut full_count = 1;
         for (i, v) in iter {
-            if mode.is_index(i, v) {
+            if true || mode.is_index(i, v) {
                 full_count += 1;
                 let bucket = unsafe { buckets.get_unchecked_mut(*v as usize) };
                 if prev < v {
@@ -211,11 +212,11 @@ where
             }
             if ind != usize::MAX {
                 let mut ind_i = ind - 1;
-                if mode.need_check() {
-                    while !mode.is_index(ind_i, &source[ind_i]) {
-                        ind_i -= 1;
-                    }
-                }
+                // if mode.need_check() {
+                //     while !mode.is_index(ind_i, &source[ind_i]) {
+                //         ind_i -= 1;
+                //     }
+                // }
                 let b_ref = unsafe { ltypes.get_unchecked(ind_i) };
                 if b_ref == true {
                     unsafe {
@@ -234,11 +235,11 @@ where
             }
             if unsafe { ltypes.get_unchecked(ind) } == true {
                 let mut ind_i = ind - 1;
-                if mode.need_check() {
-                    while !mode.is_index(ind_i, &source[ind_i]) {
-                        ind_i -= 1;
-                    }
-                }
+                // if mode.need_check() {
+                //     while !mode.is_index(ind_i, &source[ind_i]) {
+                //         ind_i -= 1;
+                //     }
+                // }
                 let mut b_ref = unsafe { ltypes.get_unchecked_mut(ind_i) };
                 if b_ref == false {
                     unsafe {
@@ -252,6 +253,7 @@ where
             }
         }
         Self::gen_check(source, &indices);
+        Self::check_remove_index(source, &mut indices, &mode);
         Self {
             values,
             indices,

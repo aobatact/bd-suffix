@@ -9,15 +9,10 @@ where
     M: ModeTester,
     C: IntoIterator<Item = (&'static str, Result<usize, usize>)>,
 {
-    // let suffix = f("abcde錆acad", mode);
     let suffix = f(value, mode);
     for case in cases {
         assert_eq!(suffix.search_naive(case.0), case.1);
     }
-    // assert_eq!(suffix.search_naive("ab"), Ok(0));
-    // assert_eq!(suffix.search_naive("ac"), Ok(1));
-    // assert!(suffix.search_naive("錆").is_ok());
-    // assert_eq!(suffix.search_naive("cb"), Err(5));
     M::test(suffix);
 }
 
@@ -52,8 +47,8 @@ where
             ("ba", Err(3)),
             ("bc", Ok(3)),
             ("bd", Err(4)),
-            ("さび",Ok(15)),
-            ("錆",Ok(17)),
+            ("さび", Ok(15)),
+            ("錆", Ok(17)),
         ],
     )
 }
@@ -74,7 +69,7 @@ where
             ("ba", Err(3)),
             ("bc", Ok(3)),
             ("bd", Err(4)),
-            ("さび",Ok(9)),
+            ("さび", Ok(9)),
         ],
     )
 }
