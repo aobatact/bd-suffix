@@ -20,7 +20,8 @@ where
         let mut x = 0;
         //get the last item
         for (i, v) in &mut iter {
-            if true || mode.is_index(i, v) {
+            // if mode.is_index(i, v) {
+            {
                 last_v = Some(v);
                 x = i;
                 break;
@@ -41,7 +42,8 @@ where
         let mut ind_count = 0;
         // Check whether the item is l or s type and throw it in the bucket.
         for (i, v) in iter {
-            if true || mode.is_index(i, v) {
+            // if mode.is_index(i, v) {
+            {
                 ind_count += 1;
                 let mut bucket = buckets.entry(v).or_insert_with(|| (0, vec![]));
                 if prev < v {
@@ -80,7 +82,7 @@ where
                 continue;
             }
             if ind != usize::MAX {
-                let mut ind_i = ind - 1;
+                let ind_i = ind - 1;
                 // if mode.need_check() {
                 //     while !mode.is_index(ind_i, &source[ind_i]) {
                 //         ind_i -= 1;
@@ -126,7 +128,8 @@ where
         let mut x = 0;
         //get the last item
         for (i, v) in &mut iter {
-            if true || mode.is_index(i, v) {
+            // if mode.is_index(i, v) {
+            {
                 last_v = Some(v);
                 x = i;
                 break;
@@ -147,7 +150,8 @@ where
         let mut ind_count = 0;
         // Check whether the item is l or s type and throw it in the bucket.
         for (i, v) in iter {
-            if true || mode.is_index(i, v) {
+            // if mode.is_index(i, v) {
+            {
                 ind_count += 1;
                 let mut bucket = &mut buckets[*v as usize];
                 if prev < v {
@@ -186,7 +190,7 @@ where
                 continue;
             }
             if ind != usize::MAX {
-                let mut ind_i = ind - 1;
+                let ind_i = ind - 1;
                 // while !mode.is_index(ind_i, &source[ind_i]) {
                 //     ind_i -= 1;
                 // }

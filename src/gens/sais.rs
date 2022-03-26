@@ -18,7 +18,8 @@ where
         let mut last_i = 0;
         //get the last item
         for (i, v) in &mut iter {
-            if true || mode.is_index(i, v) {
+            // if true || mode.is_index(i, v) {
+            {
                 last_v = Some(v);
                 last_i = i;
                 break;
@@ -39,7 +40,8 @@ where
         let mut prev_s_i = last_i;
         let mut full_count = 1;
         for (i, v) in iter {
-            if true || mode.is_index(i, v) {
+            // if mode.is_index(i, v) {
+            {
                 full_count += 1;
                 let bucket = buckets.entry(v).or_insert_with(|| (0, 0, vec![]));
                 if prev < v {
@@ -82,7 +84,7 @@ where
                 continue;
             }
             if ind != usize::MAX {
-                let mut ind_i = ind - 1;
+                let ind_i = ind - 1;
                 // if mode.need_check() {
                 //     while !mode.is_index(ind_i, &source[ind_i]) {
                 //         ind_i -= 1;
@@ -105,7 +107,7 @@ where
                 continue;
             }
             if unsafe { ltypes.get_unchecked(ind) } == true {
-                let mut ind_i = ind - 1;
+                let ind_i = ind - 1;
                 // if mode.need_check() {
                 //     while !mode.is_index(ind_i, &source[ind_i]) {
                 //         ind_i -= 1;
@@ -147,7 +149,8 @@ where
         let mut last_i = 0;
         //get the last item
         for (i, v) in &mut iter {
-            if true || mode.is_index(i, v) {
+            // if mode.is_index(i, v) {
+            {
                 last_v = Some(v);
                 last_i = i;
                 break;
@@ -168,7 +171,8 @@ where
         let mut prev_s_i = last_i;
         let mut full_count = 1;
         for (i, v) in iter {
-            if true || mode.is_index(i, v) {
+            // if mode.is_index(i, v) {
+            {
                 full_count += 1;
                 let bucket = unsafe { buckets.get_unchecked_mut(*v as usize) };
                 if prev < v {
@@ -211,7 +215,7 @@ where
                 continue;
             }
             if ind != usize::MAX {
-                let mut ind_i = ind - 1;
+                let ind_i = ind - 1;
                 // if mode.need_check() {
                 //     while !mode.is_index(ind_i, &source[ind_i]) {
                 //         ind_i -= 1;
@@ -234,7 +238,7 @@ where
                 continue;
             }
             if unsafe { ltypes.get_unchecked(ind) } == true {
-                let mut ind_i = ind - 1;
+                let ind_i = ind - 1;
                 // if mode.need_check() {
                 //     while !mode.is_index(ind_i, &source[ind_i]) {
                 //         ind_i -= 1;
