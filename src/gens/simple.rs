@@ -1,7 +1,37 @@
 use std::{collections::BTreeMap, marker::PhantomData};
 
-use super::modes::IndexMode;
+use super::{builders::Builder, IndexMode};
 use crate::SuffixArray;
+
+#[derive(Debug, Clone, Copy, Hash, PartialEq, Eq)]
+pub struct NaiveBuilder;
+
+impl<B, T, Im> Builder<B, T, Im> for NaiveBuilder
+where
+    T: Ord,
+    B: AsRef<[T]>,
+    Im: IndexMode<T>,
+{
+    #[inline]
+    fn build(values: B, mode: Im) -> crate::SuffixArray<B, T, Im> {
+        SuffixArray::new_naive(values, mode)
+    }
+}
+
+#[derive(Debug, Clone, Copy, Hash, PartialEq, Eq)]
+pub struct BucketBuilder;
+
+impl<B, T, Im> Builder<B, T, Im> for BucketBuilder
+where
+    T: Ord,
+    B: AsRef<[T]>,
+    Im: IndexMode<T>,
+{
+    #[inline]
+    fn build(values: B, mode: Im) -> crate::SuffixArray<B, T, Im> {
+        SuffixArray::new_bucket(values, mode)
+    }
+}
 
 impl<T, B, Im> SuffixArray<B, T, Im>
 where
@@ -24,7 +54,7 @@ where
         indices.sort_by_key(|x| &values[*x..]);
     }
 
-    pub fn new_naive(values: B, mode: Im) -> Self {
+    pub(crate) fn new_naive(values: B, mode: Im) -> Self {
         let mut indices = values
             .as_ref()
             .iter()
@@ -40,7 +70,7 @@ where
         }
     }
 
-    pub fn new_bucket(values: B, mode: Im) -> Self {
+    pub(crate) fn new_bucket(values: B, mode: Im) -> Self {
         let source = values.as_ref();
         let mut indices = Vec::with_capacity(source.len());
         let mut tree = BTreeMap::new();

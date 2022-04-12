@@ -1,5 +1,5 @@
 use crate::{
-    gens::modes::{IndexMode, StrIndex},
+    gens::{IndexMode, StrIndex},
     SuffixArray,
 };
 

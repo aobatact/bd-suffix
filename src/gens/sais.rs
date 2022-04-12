@@ -1,8 +1,35 @@
 use bitvec::prelude::*;
 use std::{collections::BTreeMap, iter, marker::PhantomData};
 
-use super::modes::IndexMode;
+use super::{builders::Builder, IndexMode};
 use crate::SuffixArray;
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub struct SAISBuilder;
+
+impl<T, B, Im> Builder<B, T, Im> for SAISBuilder
+where
+    T: Ord,
+    B: AsRef<[T]>,
+    Im: IndexMode<T>,
+{
+    fn build(values: B, mode: Im) -> crate::SuffixArray<B, T, Im> {
+        SuffixArray::new_sais(values, mode)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub struct SAISBuilderU8;
+
+impl<B, Im> Builder<B, u8, Im> for SAISBuilderU8
+where
+    B: AsRef<[u8]>,
+    Im: IndexMode<u8>,
+{
+    fn build(values: B, mode: Im) -> crate::SuffixArray<B, u8, Im> {
+        SuffixArray::new_sais_u8(values, mode)
+    }
+}
 
 impl<T, B, Im> SuffixArray<B, T, Im>
 where
@@ -10,7 +37,7 @@ where
     B: AsRef<[T]>,
     Im: IndexMode<T>,
 {
-    pub fn new_sais(values: B, mode: Im) -> Self {
+    pub(crate) fn new_sais(values: B, mode: Im) -> Self {
         let source = values.as_ref();
         assert_ne!(source.len(), usize::MAX);
         let mut iter = source.iter().enumerate().rev();
@@ -141,7 +168,7 @@ where
     B: AsRef<[u8]>,
     Im: IndexMode<u8>,
 {
-    pub fn new_sais_u8(values: B, mode: Im) -> Self {
+    pub(crate) fn new_sais_u8(values: B, mode: Im) -> Self {
         let source = values.as_ref();
         assert_ne!(source.len(), usize::MAX);
         let mut iter = source.iter().enumerate().rev();

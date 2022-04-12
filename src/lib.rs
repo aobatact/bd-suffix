@@ -1,5 +1,5 @@
 use std::marker::PhantomData;
-mod gens;
+pub mod gens;
 
 pub struct SuffixArray<B, T = u8, Im = ()> {
     values: B,

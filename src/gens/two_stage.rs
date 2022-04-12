@@ -1,6 +1,33 @@
-use super::modes::IndexMode;
+use super::{builders::Builder, IndexMode};
 use crate::SuffixArray;
 use std::{collections::BTreeMap, marker::PhantomData, ops::AddAssign};
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub struct TwoStageBuilder;
+
+impl<T, B, Im> Builder<B, T, Im> for TwoStageBuilder
+where
+    T: Ord + core::hash::Hash,
+    B: AsRef<[T]>,
+    Im: IndexMode<T>,
+{
+    fn build(values: B, mode: Im) -> crate::SuffixArray<B, T, Im> {
+        SuffixArray::new_two_stage(values, mode)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub struct TwoStageBuilderU8;
+
+impl<B, Im> Builder<B, u8, Im> for TwoStageBuilderU8
+where
+    B: AsRef<[u8]>,
+    Im: IndexMode<u8>,
+{
+    fn build(values: B, mode: Im) -> crate::SuffixArray<B, u8, Im> {
+        SuffixArray::new_two_stage_u8(values, mode)
+    }
+}
 
 impl<T, B, Im> SuffixArray<B, T, Im>
 where
@@ -8,7 +35,7 @@ where
     B: AsRef<[T]>,
     Im: IndexMode<T>,
 {
-    pub fn new_two_stage(values: B, mode: Im) -> Self
+    pub(crate) fn new_two_stage(values: B, mode: Im) -> Self
     where
         T: core::hash::Hash,
     {
@@ -119,7 +146,7 @@ where
     B: AsRef<[u8]>,
     Im: IndexMode<u8>,
 {
-    pub fn new_two_stage_u8(values: B, mode: Im) -> Self {
+    pub(crate) fn new_two_stage_u8(values: B, mode: Im) -> Self {
         use bitvec::prelude::*;
         let source = values.as_ref();
         assert_ne!(source.len(), usize::MAX);
