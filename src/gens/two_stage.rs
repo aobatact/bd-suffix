@@ -11,6 +11,7 @@ where
     B: AsRef<[T]>,
     Im: IndexMode<T>,
 {
+    #[inline]
     fn build(values: B, mode: Im) -> crate::SuffixArray<B, T, Im> {
         SuffixArray::new_two_stage(values, mode)
     }
@@ -24,6 +25,7 @@ where
     B: AsRef<[u8]>,
     Im: IndexMode<u8>,
 {
+    #[inline]
     fn build(values: B, mode: Im) -> crate::SuffixArray<B, u8, Im> {
         SuffixArray::new_two_stage_u8(values, mode)
     }
