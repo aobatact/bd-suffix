@@ -1,6 +1,7 @@
 use std::marker::PhantomData;
 pub mod gens;
 
+/// Simple suffix array
 pub struct SuffixArray<B, T = u8, Im = ()> {
     values: B,
     indices: Vec<usize>,
