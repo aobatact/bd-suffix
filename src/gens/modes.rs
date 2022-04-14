@@ -4,14 +4,14 @@
 /// See [`is_index`](`IndexMode::is_index`).
 pub trait IndexMode<T> {
     /// Check whether the index is used in search.
-    /// 
+    ///
     /// Some values won't be used to search because of some reason,
     /// [`str`] (or utf8) has sequence boundaries and non boundaries places won't be used to index,
     /// so this will prevent these index from searching.
     fn is_index(&self, pos: usize, value: &T) -> bool;
     /// Returns true if the indice might have some invalid sequence or want to ignore checks.
-    /// 
-    /// Should only return `true` if [`is_index`](`Self::is_index`) always returns true, 
+    ///
+    /// Should only return `true` if [`is_index`](`Self::is_index`) always returns true,
     /// and `()` can be used as [`IndexMode`] for that case.
     #[inline]
     fn need_check(&self) -> bool {

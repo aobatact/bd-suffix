@@ -1,7 +1,6 @@
-use std::{collections::BTreeMap, marker::PhantomData};
-
 use super::{builders::Builder, IndexMode};
 use crate::SuffixArray;
+use std::{collections::BTreeMap, marker::PhantomData};
 
 #[derive(Debug, Clone, Copy, Hash, PartialEq, Eq)]
 pub struct NaiveBuilder;

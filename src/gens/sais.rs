@@ -1,8 +1,7 @@
-use bitvec::prelude::*;
-use std::{collections::BTreeMap, iter, marker::PhantomData};
-
 use super::{builders::Builder, IndexMode};
 use crate::SuffixArray;
+use bitvec::prelude::*;
+use std::{collections::BTreeMap, iter, marker::PhantomData};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct SAISBuilder;

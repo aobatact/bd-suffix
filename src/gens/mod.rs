@@ -10,7 +10,7 @@ pub(crate) use modes::*;
 
 /// set of builders
 /// pick one builder and use at [`new`](`crate::SuffixArray::new`)
-/// recomment to use [`SAISBuilder`](`sais::SAISBuilder`) or [`SAISBuilderU8`](`sais::SAISBuilderU8`) 
+/// recomment to use [`SAISBuilder`](`sais::SAISBuilder`) or [`SAISBuilderU8`](`sais::SAISBuilderU8`)
 pub mod builders {
     impl<Buf, T, Im> SuffixArray<Buf, T, Im> {
         /// Create new [`SuffixArray`] by using some algorythm selected by [`Builder`].
