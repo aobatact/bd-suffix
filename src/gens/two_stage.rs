@@ -94,7 +94,7 @@ where
             l_count_all += *l_count;
             *l_count = old_len;
             // sort the s type and put in the slots.
-            Self::sort_indices(&source, s_indices);
+            Self::sort_indices(source, s_indices);
             indices.append(s_indices);
         }
         // the last item is l type and should be inserted here.
@@ -202,7 +202,7 @@ where
             l_count_all += *l_count;
             *l_count = old_len;
             // sort the s type and put in the slots.
-            Self::sort_indices(&source, s_indices);
+            Self::sort_indices(source, s_indices);
             indices.append(s_indices);
         }
         // the last item is l type and should be inserted here.

@@ -60,7 +60,7 @@ where
             .enumerate()
             .filter_map(|(index, value)| mode.is_index(index, value).then(|| index))
             .collect::<Vec<_>>();
-        Self::sort_indices(&values.as_ref(), &mut indices);
+        Self::sort_indices(values.as_ref(), &mut indices);
         Self {
             values,
             indices,
@@ -75,7 +75,7 @@ where
         let mut tree = BTreeMap::new();
         for (i, v) in source.iter().enumerate() {
             if mode.is_index(i, v) {
-                tree.entry(v).or_insert_with(|| vec![]).push(i);
+                tree.entry(v).or_insert_with(Vec::new).push(i);
             }
         }
         for (_, mut k_indices) in tree {
