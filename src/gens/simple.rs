@@ -91,10 +91,11 @@ where
         }
     }
 
-    #[cfg(feature = "gen_check")]
+    #[cfg(any(feature = "gen_check", debug_assertions))]
     pub(crate) fn gen_check(values: &[T], indices: &[usize]) {
-        assert!(
-            indices.iter().all(|x| *x != usize::MAX),
+        assert_eq!(
+            0,
+            indices.iter().filter(|x| **x == usize::MAX).count(),
             "Invalid tmp index"
         );
         indices
@@ -114,7 +115,7 @@ where
             .expect("not sorted propery");
     }
 
-    #[cfg(not(feature = "gen_check"))]
+    #[cfg(not(any(feature = "gen_check", debug_assertions)))]
     #[inline]
     pub(crate) fn gen_check(_values: &[T], _indices: &[usize]) {}
 

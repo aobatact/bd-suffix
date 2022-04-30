@@ -31,13 +31,13 @@ impl ModeTester for StrIndex {
     }
 }
 
-fn gen_test_cases_u8<F>(f: F)
+fn gen_test_cases_u8<F>(mut f: F)
 where
-    F: FnOnce(&'static str, ()) -> SuffixArray<&'static str, u8, ()>,
+    F: FnMut(&'static str, ()) -> SuffixArray<&'static str, u8, ()>,
 {
     gen_test_base(
         (),
-        f,
+        &mut f,
         "abcde錆さびacad",
         [
             ("ab", Ok(0)),
@@ -50,16 +50,26 @@ where
             ("さび", Ok(15)),
             ("錆", Ok(17)),
         ],
+    );
+    gen_test_base(
+        (),
+        f,
+        "xsijecvmbnxqynqpguzombqufmwugoayupbzawgymdtqqtojgydgbcdnqsuvvdzsawcyyevwtvadjaoqagoiceparehcixtnrglh",
+        [
+            ("zs", Ok(99)),
+            ("za", Ok(97)),
+            ("ag", Ok(1)),
+        ],
     )
 }
 
-fn gen_test_cases_str<F>(f: F)
+fn gen_test_cases_str<F>(mut f: F)
 where
-    F: FnOnce(&'static str, StrIndex) -> SuffixArray<&'static str, u8, StrIndex>,
+    F: FnMut(&'static str, StrIndex) -> SuffixArray<&'static str, u8, StrIndex>,
 {
     gen_test_base(
         StrIndex,
-        f,
+        &mut f,
         "abcde錆さびacad",
         [
             ("ab", Ok(0)),
@@ -70,6 +80,16 @@ where
             ("bc", Ok(3)),
             ("bd", Err(4)),
             ("さび", Ok(9)),
+        ],
+    );
+    gen_test_base(
+        StrIndex,
+        f,
+        "xsijecvmbnxqynqpguzombqufmwugoayupbzawgymdtqqtojgydgbcdnqsuvvdzsawcyyevwtvadjaoqagoiceparehcixtnrglh",
+        [
+            ("zs", Ok(99)),
+            ("za", Ok(97)),
+            ("ag", Ok(1)),
         ],
     )
 }
@@ -122,4 +142,14 @@ fn sais_u8_g() {
 #[test]
 fn sais_str_g() {
     gen_test_cases_str(SuffixArray::new_sais);
+}
+
+#[test]
+fn sais_u8_s() {
+    gen_test_cases_u8(SuffixArray::new_sais_u8);
+}
+
+#[test]
+fn sais_str_s() {
+    gen_test_cases_str(SuffixArray::new_sais_u8);
 }
