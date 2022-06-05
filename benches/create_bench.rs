@@ -13,7 +13,7 @@ use criterion::{black_box, criterion_group, criterion_main, BenchmarkId, Criteri
 
 fn create_bench_unit(c: &mut Criterion) {
     let mut unit_group = c.benchmark_group("create_unit");
-    for (label, target) in get_bench_str() {
+    for (label, target) in get_bench_str(StrSets::Short) {
         unit_set(&mut unit_group, target, label);
     }
     unit_group.finish();
@@ -21,8 +21,16 @@ fn create_bench_unit(c: &mut Criterion) {
 
 fn create_bench_str(c: &mut Criterion) {
     let mut str_group = c.benchmark_group("create_str");
-    for (label, target) in get_bench_str() {
+    for (label, target) in get_bench_str(StrSets::Short) {
         str_set(&mut str_group, target, label);
+    }
+    str_group.finish();
+}
+
+fn create_bench_long_sais(c: &mut Criterion) {
+    let mut str_group = c.benchmark_group("create_long");
+    for (label, target) in get_bench_str(StrSets::Long) {
+        unit_sais(&mut str_group, target, label);
     }
     str_group.finish();
 }
@@ -72,6 +80,14 @@ fn str_set(
     bench_inner::<SAISBuilderU8, _>(group, target, StrIndex, label);
 }
 
+fn unit_sais(
+    group: &mut criterion::BenchmarkGroup<criterion::measurement::WallTime>,
+    target: &'static str,
+    label: &'static str,
+) {
+    bench_inner::<SAISBuilder, _>(group, target, (), label);
+}
+
 fn bench_inner<'a, B: Builder<&'a str, u8, Im>, Im: IndexMode<u8> + Copy>(
     group: &'a mut criterion::BenchmarkGroup<criterion::measurement::WallTime>,
     target: &'a str,
@@ -92,13 +108,27 @@ fn bench_inner<'a, B: Builder<&'a str, u8, Im>, Im: IndexMode<u8> + Copy>(
     );
 }
 
-fn get_bench_str() -> impl IntoIterator<Item = (&'static str, &'static str)> {
-    [
+enum StrSets {
+    Short,
+    Long
+}
+
+fn get_bench_str(s: StrSets) -> &'static [(&'static str, &'static str)] {
+    const SHORT_SET : [(&str, &str); 3] =
+    [ 
         ("25-rust4", "rust_rust_xx_xx_rust_rust"),
         ("25-abcy",  "abcdefghijklmnopqrstuvwxy"),
         ("100-random", "xsijecvmbnxqynqpguzombqufmwugoayupbzawgymdtqqtojgydgbcdnqsuvvdzsawcyyevwtvadjaoqagoiceparehcixtnrglh"),
-    ]
+    ];
+    const LONG_SET : [(&str, &str); 1] =
+    [ 
+        ("20000-random", include_str!("random_20000.txt")),
+    ];
+    match s{
+        StrSets::Short => {&SHORT_SET},
+        StrSets::Long => {&LONG_SET},
+    }
 }
 
-criterion_group!(benches, create_bench_unit, create_bench_str);
+criterion_group!(benches, create_bench_unit, create_bench_str, create_bench_long_sais);
 criterion_main!(benches);
