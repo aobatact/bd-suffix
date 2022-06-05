@@ -51,6 +51,7 @@ where
             ("錆", Ok(17)),
         ],
     );
+    gen_test_base((), &mut f, "aaa", []);
     gen_test_base(
         (),
         f,
@@ -91,7 +92,7 @@ where
             ("za", Ok(97)),
             ("ag", Ok(1)),
         ],
-    )
+    );
 }
 
 #[test]

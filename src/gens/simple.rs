@@ -93,10 +93,15 @@ where
 
     #[cfg(any(feature = "gen_check", debug_assertions))]
     pub(crate) fn gen_check(values: &[T], indices: &[usize]) {
-        assert_eq!(
-            0,
-            indices.iter().filter(|x| **x == usize::MAX).count(),
-            "Invalid tmp index"
+        let tmp_indices = indices
+            .iter()
+            .enumerate()
+            .filter(|(_, x)| **x == usize::MAX)
+            .map(|(i, _)| i)
+            .collect::<Vec<_>>();
+        assert!(
+            tmp_indices.is_empty(),
+            "Invalid tmp indices {tmp_indices:?}"
         );
         indices
             .iter()

@@ -72,7 +72,7 @@ where
             {
                 full_count += 1;
                 let bucket = buckets.entry(v).or_insert_with(|| (0, 0, vec![]));
-                if prev < v {
+                if prev < v || (prev == v && !s_flag) {
                     bucket.0 += 1;
                     ltypes.set(i, true);
                     if s_flag {
@@ -88,6 +88,11 @@ where
                 }
                 prev = v;
             }
+        }
+        if s_flag {
+            unsafe { buckets.get_mut(prev).unwrap_unchecked() }
+                .2
+                .push(prev_s_i);
         }
         let mut indices = Vec::with_capacity(full_count);
         let mut counter = 0;
@@ -203,7 +208,7 @@ where
             {
                 full_count += 1;
                 let bucket = unsafe { buckets.get_unchecked_mut(*v as usize) };
-                if prev < v {
+                if prev < v || (prev == v && !s_flag) {
                     bucket.0 += 1;
                     ltypes.set(i, true);
                     if s_flag {

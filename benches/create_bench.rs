@@ -27,7 +27,11 @@ fn create_bench_str(c: &mut Criterion) {
     str_group.finish();
 }
 
-fn full_set(group: &mut criterion::BenchmarkGroup<criterion::measurement::WallTime>, target: &'static str, label: &'static str) {
+fn full_set(
+    group: &mut criterion::BenchmarkGroup<criterion::measurement::WallTime>,
+    target: &'static str,
+    label: &'static str,
+) {
     bench_inner::<NaiveBuilder, _>(group, target, (), label);
     bench_inner::<NaiveBuilder, _>(group, target, StrIndex, label);
     bench_inner::<BucketBuilder, _>(group, target, (), label);
@@ -42,7 +46,11 @@ fn full_set(group: &mut criterion::BenchmarkGroup<criterion::measurement::WallTi
     bench_inner::<SAISBuilderU8, _>(group, target, StrIndex, label);
 }
 
-fn unit_set(group: &mut criterion::BenchmarkGroup<criterion::measurement::WallTime>, target: &'static str, label: &'static str) {
+fn unit_set(
+    group: &mut criterion::BenchmarkGroup<criterion::measurement::WallTime>,
+    target: &'static str,
+    label: &'static str,
+) {
     bench_inner::<NaiveBuilder, _>(group, target, (), label);
     bench_inner::<BucketBuilder, _>(group, target, (), label);
     bench_inner::<TwoStageBuilder, _>(group, target, (), label);
@@ -51,7 +59,11 @@ fn unit_set(group: &mut criterion::BenchmarkGroup<criterion::measurement::WallTi
     bench_inner::<SAISBuilderU8, _>(group, target, (), label);
 }
 
-fn str_set(group: &mut criterion::BenchmarkGroup<criterion::measurement::WallTime>, target: &'static str, label: &'static str) {
+fn str_set(
+    group: &mut criterion::BenchmarkGroup<criterion::measurement::WallTime>,
+    target: &'static str,
+    label: &'static str,
+) {
     bench_inner::<NaiveBuilder, _>(group, target, StrIndex, label);
     bench_inner::<BucketBuilder, _>(group, target, StrIndex, label);
     bench_inner::<TwoStageBuilder, _>(group, target, StrIndex, label);
@@ -64,16 +76,20 @@ fn bench_inner<'a, B: Builder<&'a str, u8, Im>, Im: IndexMode<u8> + Copy>(
     group: &'a mut criterion::BenchmarkGroup<criterion::measurement::WallTime>,
     target: &'a str,
     im: Im,
-    label: &'static str
+    label: &'static str,
 ) {
-    group.bench_with_input(BenchmarkId::new(
-        type_name::<B>().rsplit_once("::").unwrap().1.to_string(), label),
-         &target, 
-         |b, i| {
-        b.iter(|| {
-            black_box(B::build(&i, im));
-        })
-    });
+    group.bench_with_input(
+        BenchmarkId::new(
+            type_name::<B>().rsplit_once("::").unwrap().1.to_string(),
+            label,
+        ),
+        &target,
+        |b, i| {
+            b.iter(|| {
+                black_box(B::build(&i, im));
+            })
+        },
+    );
 }
 
 fn get_bench_str() -> impl IntoIterator<Item = (&'static str, &'static str)> {
