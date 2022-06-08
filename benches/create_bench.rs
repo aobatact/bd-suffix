@@ -5,11 +5,6 @@ use bd_suffix::gens::{
     modes::{IndexMode, StrIndex},
 };
 use criterion::{black_box, criterion_group, criterion_main, BenchmarkId, Criterion};
-// use mycrate::fibonacci;
-
-// pub fn criterion_benchmark(c: &mut Criterion) {
-//     c.bench_function("fib 20", |b| b.iter(|| fibonacci(black_box(20))));
-// }
 
 fn create_bench_unit(c: &mut Criterion) {
     let mut unit_group = c.benchmark_group("create_unit");
@@ -110,25 +105,27 @@ fn bench_inner<'a, B: Builder<&'a str, u8, Im>, Im: IndexMode<u8> + Copy>(
 
 enum StrSets {
     Short,
-    Long
+    Long,
 }
 
 fn get_bench_str(s: StrSets) -> &'static [(&'static str, &'static str)] {
     const SHORT_SET : [(&str, &str); 3] =
-    [ 
+    [
         ("25-rust4", "rust_rust_xx_xx_rust_rust"),
         ("25-abcy",  "abcdefghijklmnopqrstuvwxy"),
         ("100-random", "xsijecvmbnxqynqpguzombqufmwugoayupbzawgymdtqqtojgydgbcdnqsuvvdzsawcyyevwtvadjaoqagoiceparehcixtnrglh"),
     ];
-    const LONG_SET : [(&str, &str); 1] =
-    [ 
-        ("20000-random", include_str!("random_20000.txt")),
-    ];
-    match s{
-        StrSets::Short => {&SHORT_SET},
-        StrSets::Long => {&LONG_SET},
+    const LONG_SET: [(&str, &str); 1] = [("20000-random", include_str!("random_20000.txt"))];
+    match s {
+        StrSets::Short => &SHORT_SET,
+        StrSets::Long => &LONG_SET,
     }
 }
 
-criterion_group!(benches, create_bench_unit, create_bench_str, create_bench_long_sais);
+criterion_group!(
+    benches,
+    create_bench_unit,
+    create_bench_str,
+    create_bench_long_sais
+);
 criterion_main!(benches);

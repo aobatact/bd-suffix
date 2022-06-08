@@ -72,7 +72,11 @@ where
             {
                 full_count += 1;
                 let bucket = buckets.entry(v).or_insert_with(|| (0, 0, vec![]));
-                if prev < v || (prev == v && !s_flag) {
+                if prev > v || (prev == v && s_flag) {
+                    bucket.1 += 1;
+                    prev_s_i = i;
+                    s_flag = true;
+                } else {
                     bucket.0 += 1;
                     ltypes.set(i, true);
                     if s_flag {
@@ -81,10 +85,6 @@ where
                             .2
                             .push(prev_s_i);
                     }
-                } else {
-                    bucket.1 += 1;
-                    prev_s_i = i;
-                    s_flag = true;
                 }
                 prev = v;
             }
@@ -208,7 +208,11 @@ where
             {
                 full_count += 1;
                 let bucket = unsafe { buckets.get_unchecked_mut(*v as usize) };
-                if prev < v || (prev == v && !s_flag) {
+                if prev > v || (prev == v && s_flag) {
+                    bucket.1 += 1;
+                    prev_s_i = i;
+                    s_flag = true;
+                } else {
                     bucket.0 += 1;
                     ltypes.set(i, true);
                     if s_flag {
@@ -217,10 +221,6 @@ where
                             .2
                             .push(prev_s_i);
                     }
-                } else {
-                    bucket.1 += 1;
-                    prev_s_i = i;
-                    s_flag = true;
                 }
                 prev = v;
             }
