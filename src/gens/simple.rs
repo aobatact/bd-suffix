@@ -79,7 +79,7 @@ where
             }
         }
         for (_, mut k_indices) in tree {
-            Self::sort_indices(&source, &mut k_indices);
+            Self::sort_indices(source, &mut k_indices);
             indices.append(&mut k_indices);
         }
 

@@ -97,7 +97,7 @@ fn bench_inner<'a, B: Builder<&'a str, u8, Im>, Im: IndexMode<u8> + Copy>(
         &target,
         |b, i| {
             b.iter(|| {
-                black_box(B::build(&i, im));
+                black_box(B::build(i, im));
             })
         },
     );

@@ -32,7 +32,7 @@ impl<T> IndexMode<T> for () {
 }
 
 /// [`IndexMode`] for [`str`] or [`String`]. This removes index pointing on non Utf8 sequence boundary.
-#[derive(Debug, Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Debug, Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord, Default)]
 pub struct StrIndex;
 
 impl IndexMode<u8> for StrIndex {
