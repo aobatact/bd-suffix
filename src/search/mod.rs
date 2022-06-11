@@ -35,7 +35,7 @@ impl<B: AsRef<[T]>, T: Ord, M, B2: AsRef<[T]>> Searcher<B, T, M, B2> for NaiveSe
     fn search_range(sa: &SuffixArray<B, T, M>, target: B2) -> Result<(usize, usize), usize> {
         let t = target.as_ref();
         let tlen = t.len();
-        let vals = &sa.values().as_ref();
+        let vals = sa.values().as_ref();
         let len = vals.len();
         binary_search_range_by(sa.indices(), |i| {
             let i = *i;
@@ -50,7 +50,7 @@ impl<B: AsRef<[T]>, T: Ord, M, B2: AsRef<[T]>> Searcher<B, T, M, B2> for NaiveSe
     fn search_contains(sa: &SuffixArray<B, T, M>, target: B2) -> bool {
         let t = target.as_ref();
         let tlen = t.len();
-        let vals = &sa.values().as_ref();
+        let vals = sa.values().as_ref();
         let len = vals.len();
         binary_first_match(sa.indices(), |i| {
             let i = *i;
